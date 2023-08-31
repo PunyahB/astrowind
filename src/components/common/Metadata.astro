@@ -6,7 +6,6 @@ import type { Props as AstroSeoProps } from '@astrolib/seo';
 
 import { SITE, METADATA, I18N } from '~/utils/config';
 import type { MetaData } from '~/types';
-import { getCanonical } from '~/utils/permalinks';
 
 import { adaptOpenGraphImages } from '~/utils/images';
 
@@ -17,7 +16,6 @@ export interface Props extends MetaData {
 const {
   title,
   ignoreTitleTemplate = false,
-  canonical = String(getCanonical(String(Astro.url.pathname))),
   robots = {},
   description,
   openGraph = {},
@@ -28,12 +26,10 @@ const seoProps: AstroSeoProps = merge(
   {
     title: '',
     titleTemplate: '%s',
-    canonical: canonical,
     noindex: true,
     nofollow: true,
     description: undefined,
     openGraph: {
-      url: canonical,
       site_name: SITE?.name,
       images: [],
       locale: I18N?.language || 'en',
@@ -55,11 +51,9 @@ const seoProps: AstroSeoProps = merge(
   {
     title: title,
     titleTemplate: ignoreTitleTemplate ? '%s' : undefined,
-    canonical: canonical,
     noindex: typeof robots?.index !== 'undefined' ? !robots.index : undefined,
     nofollow: typeof robots?.follow !== 'undefined' ? !robots.follow : undefined,
     description: description,
-    openGraph: { url: canonical, ...openGraph },
     twitter: twitter,
   }
 );
